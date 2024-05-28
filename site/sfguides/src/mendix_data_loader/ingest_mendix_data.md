@@ -16,17 +16,17 @@ In this tutorial you will learn how to ingest data from a Mendix application. In
 
 ![Architecture diagram](assets/architecture_diagram.png)
 
-## Prerequisites
-Duration: 1
+### Prerequisites
 
 - Mendix account, if you don't have one sign up [here](https://signup.mendix.com/)
 - Mendix Studio Pro ([10.10](https://marketplace.mendix.com/link/studiopro/10.10.0) or later)
-- Snowflake user with `ACCOUNTADMIN` role
+- Snowflake user with `ACCOUNTADMIN` role to install the Mendix Data Loader
 
-## You will learn
-Duration: 1
+### You will learn
 
+- How to install the Mendix Data Loader
 - How to ingest operational Mendix application data into Snowflake
+- How to join associated tables
 
 ## Set-up your Mendix application
 Duration: 15
@@ -98,3 +98,39 @@ You have now successfully granted the Mendix Data Loader with the privileges and
 
 ### Start the ingestion
 Move back to the initial browser tab in which you had opened the Mendix Data Loader. If the input fields have the same values as the ones that you specified for the access script generation, you can now click the `Ingest Data` button. If not, go back one step and specify the values in the form of the application again and then click the `Ingest Data` button.
+
+![Ingestion completed](assets/completed_ingestion.png)
+
+## Join associated tables
+Duration: 5
+
+You can view the ingested data along the following path: {{SPECIFIED_TARGET_DATABASE}}.{{SPECIFIED_TARGET_SCHEMA}}, e.g., MOVIE_DB.MOVIE_APP.
+
+![Ingested data](assets/tables.png)
+
+In Mendix, the data structure is modeled as following:
+
+![Domain model](assets/domainmodel.png)
+
+After the data ingestion, you will have a table for each distinct exposed entity. For the entities that have an association (object reference) with another entity, a foreign key is included provided that this has been configured in the published OData service. In this exercise, you'll be be joining the two distinct entity tables using the foreign key.
+
+Create a new SQL worksheet. Copy the code snippet below and execute the script. In case you specified different names than `MOVIE_DB` for the target database and `MOVIE_APP` for the target schema, update the SQL script accordingly.
+
+```
+USE DATABASE MOVIE_DB;
+USE SCHEMA MOVIE_APP;
+SELECT NAME as "Movie Name", MX_REVIEW.REVIEWTEXT as "Review"
+  FROM MX_MOVIE
+  INNER JOIN MX_REVIEW ON MX_REVIEW.MOVIE=MX_MOVIE.ID;
+```
+
+The result should display a joined table containing 56 rows. Each row displays the name of the movie and review that corresponds to the movie.
+
+![Joined tables](assets/joined.png)
+
+## Conclusion
+Duration: 2
+
+You made it! By now, you should be able to deploy a Mendix application to a sandbox environment, install the Mendix Data Loader and join two distinct entity tables.
+
+For additional information about the Mendix Data Loader, refer to [Mendix Data Loader | Mendix Documentation](https://docs.mendix.com/appstore/modules/snowflake/mendix-data-loader/).
