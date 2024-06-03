@@ -27,6 +27,7 @@ In this tutorial, you will learn how to ingest data from a Mendix application. Y
 
 * How to install the Mendix Data Loader
 * How to ingest operational Mendix application data into Snowflake
+* How to schedule ingestion jobs using tasks
 * How to join associated tables
 
 ## Setting up your Mendix application
@@ -59,7 +60,7 @@ The application you just downloaded, uploaded to the Mendix version control serv
 
 Duration: 5
 
-1. Download the Mendix Data Loader from the [Snowflake Marketplace](https://app.snowflake.com/marketplace/listing/GZTDZHHIDN/mendix-mendix-data-loader).
+1. Download the Mendix Data Loader from the [Snowflake Marketplace](https://app.snowflake.com/marketplace/listing/GZTDZHHIE0/mendix-mendix-data-loader).
 2. Once a window displaying **Succesfully Installed** appears, click **Done**, navigate to **Data Products** > **Apps** > **Mendix Data Loader**.
 
 You have succesfully deployed the Mendix Data Loader into your Snowflake environment.
@@ -90,7 +91,7 @@ Upon starting the application, a documentation page that includes usage instruct
 
 The Mendix Data Loader requires the `CREATE DATABASE` privilege to create the target database. This is where the data is ingested towards. To that end, a modal window will request that you grant the application these privileges. Click **Grant Privileges** to accept this request.
 
-Next, the application requires a `NETWORK RULE`, `SECRET` and `EXTERNAL ACCESS INTEGRATION` objects to make the external call towards your deployed Mendix application instance. To create these objects, fill in the form of the application as follows:
+Next, the application requires a `NETWORK RULE`, `SECRET` and `EXTERNAL ACCESS INTEGRATION` objects to make the external call towards your deployed Mendix application instance. To create these objects, fill in the **Ingestion Configuration** form of the application as follows:
 
 * **Endpoint** - The location of the OData resource `{{YOUR_SAVED_ENDPOINT}}/odata/Movies/v1/`, for example, `https://sfshowcase101-sandbox.mxapps.io/odata/Movies/v1/`
 * **Username** - SFDataLoaderUser
@@ -98,7 +99,7 @@ Next, the application requires a `NETWORK RULE`, `SECRET` and `EXTERNAL ACCESS I
 * **Target database name** - MOVIE_DB
 * **Target schema name** - MOVIE_APP
 
-After that, click **Generate Access Script** and copy the value of the generated field. This button uses the values from the fields to create a SQL script that a user with the `ACCOUNTADMIN` role needs to execute. This script will create the objects in the database titled `mx_data_loader_secrets` and grant the application privileges to access those objects.
+After that, click **Submit** button. On the main tab click the **Generate Access Script** and copy the value of the generated field. This button uses the values from the fields to create a SQL script that a user with the `ACCOUNTADMIN` role needs to execute. This script will create the objects in the database titled `mx_data_loader_secrets` and grant the application privileges to access those objects.
 
 ![Access script](assets/access_script.png)
 
@@ -108,9 +109,26 @@ You have now successfully granted the Mendix Data Loader with the privileges and
 
 ### Starting the ingestion
 
-Move back to the initial browser tab in which you had opened the Mendix Data Loader. If the input fields have the same values as the ones that you specified for the access script generation, you can now click the **Ingest Data** button. If not, go back one step and specify the values in the form of the application again and then click the **Ingest Data** button.
+Move back to the initial browser tab in which you had opened the Mendix Data Loader. If the input fields have the same values as the ones that you specified for the access script generation, you can now navigate to the **Main** tab and click the **Ingest Data** button. If not, go back one step and specify the values in the form of the application again and then navigate to the **Main** tab and click the **Ingest Data** button.
 
 ![Ingestion completed](assets/completed_ingestion.png)
+
+### Scheduling data ingestion
+
+Move back to the initial browser tab in which you had opened the Mendix Data Loader. If the input fields have the same values as the ones that you specified for the access script generation, you can now navigate to the **Schedule Task** tab and configure the task used for scheduling ingestion jobs as follows:
+
+* **When should the ingestion task run?**: Choose custom CRON expression.
+* **Custom CRON expression**: `{{Convenient minute of every hour the ingestion should be executed}} * * * * UTC`(This field is only used when the user chooses to provide a custom CRON expression).
+* **Time out**: Leave this field empty (This is a optional setting that can be used to change after how much time a timeout exception should happen).
+* **Number of retry attempts**: Leave this field empty (This setting sets how many retries should be performed if an ingestion job fails).
+* **Suspend task after number of failures**: Leave this field empty (This setting sets the number of times a task is allowed to consecutively fail before suspending the task).
+after which the **Schedule Ingestion Task** button should be pressed. You can view details of the created task on the **Task Management** tab where you can also view its performed ingestion jobs, suspend/enable the task and drop the task.
+
+If you have set the CRON expression to for example **15 * * * * UTC** (every 15th minute of the hour) on the task you have created navigate to the **Task Management** tab. If the 15th minute of the hour has passed you can press the **Show Task's Ingestion Jobs** button to view the ingestion jobs that has been executed via the created task. On the **Task Management** tab you can also suspend or enable tasks using the **Suspend Task** or **Enable Task** buttons (depending on the current status of the task) or drop the task all together using the **Drop Task** button.
+
+![TaskManagement](https://github.com/naveenalanthomas/sfquickstarts/assets/139855197/9c434e62-e1aa-4d03-8ede-864f68aabd70)
+
+Before continuing we advice to drop the task you have just created so that no unnecessary ingestions are preformed after finishing this quickstart course.
 
 ## Joining associated tables
 
