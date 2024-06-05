@@ -109,7 +109,7 @@ You have now successfully granted the Mendix Data Loader with the privileges and
 
 ### Starting the ingestion
 
-Move back to the initial browser tab in which you had opened the Mendix Data Loader. If the input fields have the same values as the ones that you specified for the access script generation, you can now navigate to the **Main** tab and click the **Ingest Data** button. If not, go back one step and specify the values in the form of the application again and then navigate to the **Main** tab and click the **Ingest Data** button.
+Move back to the initial browser tab in which you had opened the Mendix Data Loader. If the input fields have the same values as the ones that you specified for the access script generation, you can now navigate to the **Main** tab and click the **Ingest Data now** button. If not, go back one step and specify the values in the form of the application again and then navigate to the **Main** tab and click the **Ingest Data now** button.
 
 ![Ingestion completed](assets/completed_ingestion.png)
 
@@ -122,13 +122,14 @@ Move back to the initial browser tab in which you had opened the Mendix Data Loa
 * **Time out**: Leave this field empty (This is a optional setting that can be used to change after how much time a timeout exception should happen).
 * **Number of retry attempts**: Leave this field empty (This setting sets how many retries should be performed if an ingestion job fails).
 * **Suspend task after number of failures**: Leave this field empty (This setting sets the number of times a task is allowed to consecutively fail before suspending the task).
-after which the **Schedule Ingestion Task** button should be pressed. You can view details of the created task on the **Task Management** tab where you can also view its performed ingestion jobs, suspend/enable the task and drop the task.
+  
+Click the **Schedule Ingestion Task** button, a message confirming the scheduling of the task should appear. You can view details of the created task on the **Task Management** tab where your tasks.
 
-If you have set the CRON expression to for example **15 * * * * UTC** (every 15th minute of the hour) on the task you have created navigate to the **Task Management** tab. If the 15th minute of the hour has passed you can press the **Show Task's Ingestion Jobs** button to view the ingestion jobs that has been executed via the created task. On the **Task Management** tab you can also suspend or enable tasks using the **Suspend Task** or **Enable Task** buttons (depending on the current status of the task) or drop the task all together using the **Drop Task** button.
+If you have set the CRON expression to for example **15 * * * * UTC** (every 15th minute of the hour) on the task you have created navigate to the **Task Management** tab. If the 15th minute of the hour has passed you can press the **Show Task's Ingestion Jobs** button to view the ingestion jobs that has been executed via the created task. In the **Task Management** tab, you can suspend or resume tasks using the **Suspend Task** or **Enable Task** buttons, or drop the task using the **Drop Task** button.
 
-![TaskManagement](https://github.com/naveenalanthomas/sfquickstarts/assets/139855197/9c434e62-e1aa-4d03-8ede-864f68aabd70)
+![TaskManagement](assets/task_management.png)
 
-Before continuing we advice to drop the task you have just created so that no unnecessary ingestions are preformed after finishing this quickstart course.
+Before you proceed, we advise to drop the task you have just created so that no unnecessary ingestions are executed after finishing this quickstart course.
 
 ## Joining associated tables
 
